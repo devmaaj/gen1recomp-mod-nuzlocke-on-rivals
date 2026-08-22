@@ -2,7 +2,7 @@
 local State = require("src/state")
 local Rules = require("src/rules")
 
--- Registrar todas as regras (ordem = ordem de ativação)
+-- Registrar todas as regras
 Rules.register("capture_limit",       require("src/rules/capture"))
 Rules.register("nickname_required",   require("src/rules/nickname"))
 Rules.register("death_permanent",     require("src/rules/death"))
@@ -44,19 +44,27 @@ return function(mod)
     })
   end)
 
-  -- Título: hook render.hud para desenhar em cima de tudo
-  -- Game:draw() chama render.hud a cada frame inclusive na tela de título
+  -- Título: render.hud desenha em window space (após Renderer:endFrame)
+  -- Precisamos transformar coordenadas 160x144 → window usando viewport
   mod.hooks:wrap("render.hud", function(next_fn, game, viewport)
     local Font = require("src.render.Font")
-    local stack = game.stack
-    local top = stack and stack:top()
-    -- Verificar se estamos na tela de título
-    local isTitle = top and (top.screenId == "TitleState"
-                  or (top.onNewGame and top.logo))
-    if isTitle then
+    local top = game.stack and game.stack:top()
+    local isTitle = top and top.onNewGame and top.logo
+    if isTitle and viewport then
+      -- viewport: { gameX, gameY, gameWidth, gameHeight, scale }
+      local gx = viewport.gameX or 0
+      local gy = viewport.gameY or 0
+      local gw = viewport.gameWidth or 160
+      local gh = viewport.gameHeight or 144
+      local sx = gw / 160
+      local sy = gh / 144
+      love.graphics.push()
+      love.graphics.translate(gx, gy)
+      love.graphics.scale(sx, sy)
       love.graphics.setColor(0, 0, 0, 1)
       Font.draw("NUZLOCKE ON RIVALS", 12, 136)
       love.graphics.setColor(1, 1, 1, 1)
+      love.graphics.pop()
     end
     return next_fn(game, viewport)
   end)
