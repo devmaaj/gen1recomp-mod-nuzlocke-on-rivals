@@ -1,0 +1,29 @@
+return {
+  summary   = "Nuzlocke competitivo 1v1 com rival battles e MD3 dominance.",
+  author    = "pokemon-profile",
+  tags      = { "nuzlocke", "competitive", "link-play", "hardcore", "ruleset" },
+  differences = {
+    changed = {},
+    added   = {
+      "Captura limitada por área",
+      "Morte permanente com ghost sprite",
+      "HM exclusiva (1 HM por Pokémon vivo)",
+      "Proibição de rematch",
+      "Itens de cura só em batalha",
+      "Lojas: compras restritas a não-cura",
+      "Academias sem saída",
+      "Dungeons de uma só vez",
+      "Limite de centros em dungeons",
+      "Sistema de rival via link play",
+      "Duelo de Dominância (MD3)",
+      "Pink Slip (troca forçada pós-MD3)",
+      "Tela de game over com stats",
+    },
+    known   = {
+      "Regras de link play precisam de testes com dois jogadores",
+      "Tela de reordenação de party entre rounds MD3 (TODO)",
+    },
+  },
+  credits   = {},
+  compat    = { engine = ">=1.0.0 <2.0.0", modApi = 2 },
+}

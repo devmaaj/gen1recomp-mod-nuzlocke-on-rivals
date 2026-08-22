@@ -1,0 +1,17 @@
+{
+  "id": "nuzlocke_on_rival",
+  "name": "Nuzlocke On Rival",
+  "version": "0.1.0",
+  "api": 2,
+  "entry": "main.lua",
+  "profile": "overhaul",
+  "category": "MECHANIC",
+  "game_version": ">=1.0.0 <2.0.0",
+  "priority": 50,
+  "affects_link": true,
+  "permissions": ["engine_internals"],
+  "dependencies": [],
+  "optional_dependencies": [],
+  "conflicts": [],
+  "description": "Nuzlocke competitivo 1v1 com rival battles, MD3 dominance e pink slips."
+}
