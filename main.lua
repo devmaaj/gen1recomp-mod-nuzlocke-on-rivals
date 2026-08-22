@@ -40,17 +40,23 @@ return function(mod)
       label = "NUZLOCKE STATUS",
       onSelect = function()
         mod.log:info("[Nuzlocke] Abrindo status...")
-        -- TODO: push NuzlockeStatus screen
       end,
     })
   end)
 
-  -- Título: sobrescrever copyrightText com "NUZLOCKE ON RIVALS"
-  -- render.hud NÃO dispara na tela de título (TitleState tem draw próprio)
-  -- boot.title.copyrightText é desenhado em y=136 no final do TitleState:draw()
-  mod.content.field:patch("boot", {
-    title = { copyrightText = "NUZLOCKE ON RIVALS" },
-  })
+  -- Título: sobrescrever copyrightText via game.data.field
+  -- TitleState:draw() lê self.title.copyrightText de game.data.field.boot.title
+  mod.hooks:wrap("game.init", function(next_fn, game)
+    if game and game.data and game.data.field then
+      local boot = game.data.field.boot
+      if boot then
+        boot.title = boot.title or {}
+        boot.title.copyrightText = "NUZLOCKE ON RIVALS"
+        mod.log:info("[Nuzlocke] Copyright text definido")
+      end
+    end
+    return next_fn(game)
+  end)
 
   mod.log:info("Nuzlocke On Rival v0.1.0 carregado")
 end
