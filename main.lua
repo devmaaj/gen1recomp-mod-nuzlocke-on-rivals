@@ -40,21 +40,17 @@ return function(mod)
       label = "NUZLOCKE STATUS",
       onSelect = function()
         mod.log:info("[Nuzlocke] Abrindo status...")
-        -- TODO: push NuzlockeStatus screen (Fase 20)
+        -- TODO: push NuzlockeStatus screen
       end,
     })
   end)
 
-  -- Título: adicionar "NUZLOCKE ON RIVALS" na tela de apresentação
-  mod.hooks:wrap("render.hud", function(next_fn, game, viewport)
-    local Font = require("src.render.Font")
-    -- Detectar se está na tela de título
-    local top = game.stack and game.stack:top()
-    if top and top.screenId == "TitleState" then
-      Font.draw("NUZLOCKE ON RIVALS", 24, 136)
-    end
-    return next_fn(game, viewport)
-  end)
+  -- Título: sobrescrever copyrightText com "NUZLOCKE ON RIVALS"
+  -- render.hud NÃO dispara na tela de título (TitleState tem draw próprio)
+  -- boot.title.copyrightText é desenhado em y=136 no final do TitleState:draw()
+  mod.content.field:patch("boot", {
+    title = { copyrightText = "NUZLOCKE ON RIVALS" },
+  })
 
   mod.log:info("Nuzlocke On Rival v0.1.0 carregado")
 end
