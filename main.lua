@@ -44,18 +44,21 @@ return function(mod)
     })
   end)
 
-  -- Título: sobrescrever copyrightText via game.data.field
-  -- TitleState:draw() lê self.title.copyrightText de game.data.field.boot.title
-  mod.hooks:wrap("game.init", function(next_fn, game)
-    if game and game.data and game.data.field then
-      local boot = game.data.field.boot
-      if boot then
-        boot.title = boot.title or {}
-        boot.title.copyrightText = "NUZLOCKE ON RIVALS"
-        mod.log:info("[Nuzlocke] Copyright text definido")
-      end
+  -- Título: hook render.hud para desenhar em cima de tudo
+  -- Game:draw() chama render.hud a cada frame inclusive na tela de título
+  mod.hooks:wrap("render.hud", function(next_fn, game, viewport)
+    local Font = require("src.render.Font")
+    local stack = game.stack
+    local top = stack and stack:top()
+    -- Verificar se estamos na tela de título
+    local isTitle = top and (top.screenId == "TitleState"
+                  or (top.onNewGame and top.logo))
+    if isTitle then
+      love.graphics.setColor(0, 0, 0, 1)
+      Font.draw("NUZLOCKE ON RIVALS", 12, 136)
+      love.graphics.setColor(1, 1, 1, 1)
     end
-    return next_fn(game)
+    return next_fn(game, viewport)
   end)
 
   mod.log:info("Nuzlocke On Rival v0.1.0 carregado")
